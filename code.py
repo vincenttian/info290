@@ -82,6 +82,24 @@ if __name__ == '__main__':
         print '# of commentThreads: ' + str(count_dict['commentThread'])
         print '# of introductions: ' + str(count_dict['introduction'])
 
+# Gets dictionary of effort in seconds of a class based on week
+import csv
+from collections import defaultdict
+
+master_effort = defaultdict(int)
+
+with open('engagement_Engineering_CS101_Summer2014_weeklyEffort.csv', 'rb') as csvfile:
+    contents = csv.reader(csvfile)
+    print 'week, effort'
+    for row in contents:
+        week = row[3]
+        try:
+            effort = int(row[4])
+            master_effort[week] += effort
+        except ValueError:
+            continue
+            
+print dict(master_effort)
 
 
 
