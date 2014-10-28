@@ -1,6 +1,8 @@
 import csv
 import datetime
-
+import collections
+from collections import defaultdict
+from scipy.stats.stats import pearsonr
 
 def valid_date(datestring):
     try:
@@ -19,12 +21,17 @@ if __name__ == '__main__':
         master_dict = dict()
         count_dict = dict()
         date_dict = dict()
+        week_dict = dict()
+        week_posts = []
+        for i in range(8):
+            week_posts.append(0)
         count_dict['question'] = 0
         count_dict['thanks'] = 0
         count_dict['sentence'] = 0
         count_dict['comment'] = 0
         count_dict['commentThread'] = 0
         count_dict['introduction'] = 0
+        count_dict['not_introduction'] = 0
         for row in contents:
             if len(row) < 17:
                 continue
@@ -54,6 +61,8 @@ if __name__ == '__main__':
                 info['thanks'] = False
             if 'hi' in comment.lower() or 'hello' in comment.lower() or 'hey' in comment.lower() or 'everyone' in comment.lower():
                 count_dict['introduction'] += 1;
+            else:
+                count_dict['not_introduction'] += 1;
             if '?' in comment:
                 count_dict['question'] += 1
             if '.' in comment or '!' in comment:
@@ -74,33 +83,45 @@ if __name__ == '__main__':
                     date_dict[d] += 1
                 else:
                     date_dict[d] = 1
-        # print date_dict
+                week = (datetime.datetime.strptime(d,'%Y-%m-%d') - datetime.datetime.strptime('2014-07-15', '%Y-%m-%d')).days/7
+                week_posts[week] += 1;
+                if week + 1 in week_dict:
+                    week_dict[week + 1] += 1
+                else:
+                    week_dict[week + 1] = 1
+        print week_dict
+        print week_posts
+        ordered_date_dict = collections.OrderedDict(sorted(date_dict.items()))
+        print ordered_date_dict
         print '# of questions: ' + str(count_dict['question'])
         print '# of thanks: ' + str(count_dict['thanks'])
         print '# of sentences: ' + str(count_dict['sentence'])
         print '# of comments: ' + str(count_dict['comment'])
         print '# of commentThreads: ' + str(count_dict['commentThread'])
         print '# of introductions: ' + str(count_dict['introduction'])
+        print '# of not_introductions: ' + str(count_dict['not_introduction'])
 
-# Gets dictionary of effort in seconds of a class based on week
-import csv
-from collections import defaultdict
+    # Gets dictionary of effort in seconds of a class based on week
+    master_effort = defaultdict(int)
+    weekly_effort = []
+    for i in range(8):
+        weekly_effort.append(0)
 
-master_effort = defaultdict(int)
-
-with open('engagement_Engineering_CS101_Summer2014_weeklyEffort.csv', 'rb') as csvfile:
-    contents = csv.reader(csvfile)
-    print 'week, effort'
-    for row in contents:
-        week = row[3]
-        try:
-            effort = int(row[4])
-            master_effort[week] += effort
-        except ValueError:
-            continue
-            
-print dict(master_effort)
-
+    with open('engagement_Engineering_CS101_Summer2014_weeklyEffort.csv', 'rb') as csvfile:
+        contents = csv.reader(csvfile)
+        print 'week, effort'
+        for row in contents:
+            week = row[3]
+            try:
+                effort = int(row[4])
+                weekly_effort[int(week) - 1] += effort
+                master_effort[week] += effort
+            except ValueError:
+                continue
+    print weekly_effort
+    print dict(master_effort)
 
 
+
+    print pearsonr(weekly_effort, week_posts)
 
