@@ -24,6 +24,7 @@ if __name__ == '__main__':
         count_dict['sentence'] = 0
         count_dict['comment'] = 0
         count_dict['commentThread'] = 0
+        count_dict['introduction'] = 0
         for row in contents:
             if len(row) < 17:
                 continue
@@ -51,6 +52,8 @@ if __name__ == '__main__':
                 count_dict['thanks'] += 1
             else:
                 info['thanks'] = False
+            if 'hi' in comment.lower() or 'hello' in comment.lower() or 'hey' in comment.lower() or 'everyone' in comment.lower():
+                count_dict['introduction'] += 1;
             if '?' in comment:
                 count_dict['question'] += 1
             if '.' in comment or '!' in comment:
@@ -60,6 +63,9 @@ if __name__ == '__main__':
             else:
                 count_dict['comment'] += 1
             master_dict[forum_post_id] = info
+
+        #counting dates
+        print 'TOTAL: ' + str(len(master_dict))
         for posts in master_dict:
             info = master_dict[posts]
             d = info['date']
@@ -74,7 +80,7 @@ if __name__ == '__main__':
         print '# of sentences: ' + str(count_dict['sentence'])
         print '# of comments: ' + str(count_dict['comment'])
         print '# of commentThreads: ' + str(count_dict['commentThread'])
-
+        print '# of introductions: ' + str(count_dict['introduction'])
 
 # Gets dictionary of effort in seconds of a class based on week
 import csv
