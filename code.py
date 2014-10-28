@@ -74,7 +74,7 @@ if __name__ == '__main__':
                     date_dict[d] += 1
                 else:
                     date_dict[d] = 1
-        print date_dict
+        # print date_dict
         print '# of questions: ' + str(count_dict['question'])
         print '# of thanks: ' + str(count_dict['thanks'])
         print '# of sentences: ' + str(count_dict['sentence'])
