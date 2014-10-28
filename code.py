@@ -98,10 +98,16 @@ if __name__ == '__main__':
                     week_non_intro_posts[week] += 1
         print 'non intro posts'
         print week_non_intro_posts
+        print 'week posts'
         print week_posts
         print 'percentages'
-        print week_posts/2543
+        week_posts_percentages = [x / 2543.0 for x in week_posts]
+        print week_posts_percentages
         print sum(week_posts)
+        print 'total non_intro'
+        print sum(week_non_intro_posts)
+        print 'non intro percentages'
+        week_non_intro_percentages = [x / 2543.0 for x in week_non_intro_posts]
         ordered_date_dict = collections.OrderedDict(sorted(date_dict.items()))
         # print ordered_date_dict
         print '# of questions: ' + str(count_dict['question'])
@@ -135,3 +141,5 @@ if __name__ == '__main__':
 
     print 'correlation between weekly effort and # posts: ' + str(pearsonr(weekly_effort, week_posts)[0])
 
+    print weekly_effort
+    print week_posts
