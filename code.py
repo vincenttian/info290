@@ -23,8 +23,10 @@ if __name__ == '__main__':
         date_dict = dict()
         week_dict = dict()
         week_posts = []
+        week_non_intro_posts = []
         for i in range(8):
             week_posts.append(0)
+            week_non_intro_posts.append(0)
         count_dict['question'] = 0
         count_dict['thanks'] = 0
         count_dict['sentence'] = 0
@@ -59,9 +61,11 @@ if __name__ == '__main__':
                 count_dict['thanks'] += 1
             else:
                 info['thanks'] = False
-            if 'hi' in comment.lower() or 'hello' in comment.lower() or 'hey' in comment.lower() or 'everyone' in comment.lower():
+            if 'hi' in comment.lower() or 'hello' in comment.lower() or 'hey' in comment.lower():
+                info['intro'] = True
                 count_dict['introduction'] += 1;
             else:
+                info['intro'] = False
                 count_dict['not_introduction'] += 1;
             if '?' in comment:
                 count_dict['question'] += 1
@@ -89,10 +93,17 @@ if __name__ == '__main__':
                     week_dict[week + 1] += 1
                 else:
                     week_dict[week + 1] = 1
-        print week_dict
+                if not info['intro']:
+                    # print week
+                    week_non_intro_posts[week] += 1
+        print 'non intro posts'
+        print week_non_intro_posts
         print week_posts
+        print 'percentages'
+        print week_posts/2543
+        print sum(week_posts)
         ordered_date_dict = collections.OrderedDict(sorted(date_dict.items()))
-        print ordered_date_dict
+        # print ordered_date_dict
         print '# of questions: ' + str(count_dict['question'])
         print '# of thanks: ' + str(count_dict['thanks'])
         print '# of sentences: ' + str(count_dict['sentence'])
@@ -109,7 +120,6 @@ if __name__ == '__main__':
 
     with open('engagement_Engineering_CS101_Summer2014_weeklyEffort.csv', 'rb') as csvfile:
         contents = csv.reader(csvfile)
-        print 'week, effort'
         for row in contents:
             week = row[3]
             try:
@@ -118,10 +128,10 @@ if __name__ == '__main__':
                 master_effort[week] += effort
             except ValueError:
                 continue
+    # print 'week, effort'
     print weekly_effort
-    print dict(master_effort)
+    print sum(weekly_effort)
+    # print dict(master_effort)
 
-
-
-    print pearsonr(weekly_effort, week_posts)
+    print 'correlation between weekly effort and # posts: ' + str(pearsonr(weekly_effort, week_posts)[0])
 
