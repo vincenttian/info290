@@ -107,6 +107,9 @@ if __name__ == '__main__':
     clf = svm.SVC()
     clf.fit(training_features, training_certified)
 
+    for i in testing_features:
+        predicted_certified = clf.predict(i)[0]
+        print predicted_certified
 
 
     # NLTK, regex
