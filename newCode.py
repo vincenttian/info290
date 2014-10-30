@@ -87,16 +87,17 @@ if __name__ == '__main__':
     testing_certified = []
     count = 0
     for i in ordered_master_dict:
-        if count > 1000:
+        mid = 2000
+        if count > 7682:
             break
         if i not in ordered_certified:
             continue
-        if count <= 500:
+        if count <= mid:
             f_array = ordered_master_dict[i]
             training_features.append(f_array)
             training_scores.append(grades_dict[i])
             training_certified.append(certified_dict[i])
-        if count > 500:
+        else:
             f_array = ordered_master_dict[i]
             testing_features.append(f_array)
             testing_scores.append(grades_dict[i])
@@ -104,12 +105,16 @@ if __name__ == '__main__':
         count += 1
     print len(training_features)
     print len(testing_features)
-    clf = svm.SVC()
+    clf = svm.SVC(kernel='linear')
     clf.fit(training_features, training_certified)
 
-    for i in testing_features:
-        predicted_certified = clf.predict(i)[0]
-        print predicted_certified
+    num_correct_certified = 0
+    for i in range(len(testing_features)):
+        predicted_certified = clf.predict(testing_features[i])[0]
+        if predicted_certified == testing_certified[i]:
+            num_correct_certified += 1
+    print float(num_correct_certified/float(len(testing_features)))
 
+    print clf.coef_
 
     # NLTK, regex
